@@ -1,8 +1,13 @@
 import VueTour from 'vue-tour'
 
-document.addEventListener('datashare:ready', async ({ detail }) => {
+import Tour from './Tour'
+
+import './node_modules/vue-tour/dist/vue-tour.css'
+
+document.addEventListener('datashare:ready', ({ detail }) => {
+  detail.core.use(VueTour)
   detail.core.registerHook({
     target: 'landing.form:before',
-    definition: '<div class="alert alert-info landing__plugin">This alert was created by `datashare-plugin-tour` plugin.</div>'
+    definition: Tour
   })
 }, false)
