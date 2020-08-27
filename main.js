@@ -1,3 +1,5 @@
+import VueTour from 'vue-tour'
+
 document.addEventListener('datashare:ready', async ({ detail }) => {
   detail.core.registerHook({
     target: 'landing.form:before',
