@@ -1,5 +1,5 @@
 <template>
-  <v-tour name="tour" :steps="steps"></v-tour>
+  <v-tour name="tour" :steps="steps" :callbacks="callbacks"></v-tour>
 </template>
 
 <script>
@@ -9,33 +9,32 @@ export default {
   name: 'Tour',
   data () {
     return {
-      allSteps: {
-        landing: [{
-          target: '.project-cards__item:nth-child(1)',
-          header: {
-            title: 'First step',
-          },
-          content: 'Enter a project like the LuxLeaks!'
-        }],
-        search: [{
-          target: '.search-layout-selector__button:nth-child(3)',
-          header: {
-            title: 'Second step',
-          },
-          content: 'Use different views: List, Grid and Table'
-        }, {
-          target: '.filters-panel .filter:nth-child(6)',
-          header: {
-            title: 'Use filters',
-          },
-          content: 'To select language for example.'
-        }]
+      steps: [{
+        target: '.project-cards__item:nth-child(1)',
+        header: {
+          title: 'First step',
+        },
+        content: 'Enter a project like the LuxLeaks!'
+      }, {
+        target: '.search-layout-selector__button:nth-child(3)',
+        header: {
+          title: 'Second step',
+        },
+        content: 'Use different views: List, Grid and Table'
+      }],
+      callbacks: {
+        onNextStep: this.onNextStep
       }
     }
   },
   computed: {
     steps () {
       return get(this.allSteps, this.$route.name, [])
+    }
+  },
+  methods: {
+    onNextStep (currentStep) {
+      if (currentStep === 0) this.$router.push({ name: 'search' })
     }
   },
   mounted () {
