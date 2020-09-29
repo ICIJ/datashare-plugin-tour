@@ -6,8 +6,5 @@ import './node_modules/vue-tour/dist/vue-tour.css'
 
 document.addEventListener('datashare:ready', ({ detail }) => {
   detail.core.use(VueTour)
-  detail.core.registerHook({
-    target: 'landing.form:before',
-    definition: Tour
-  })
+  detail.core.registerHook({ target: 'app:after', definition: Tour })
 }, false)
