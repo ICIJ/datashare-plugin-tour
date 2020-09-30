@@ -1,10 +1,8 @@
 <template>
-  <v-tour name="tour" :steps="steps" :callbacks="callbacks"></v-tour>
+  <v-tour name="tour" :steps="steps"></v-tour>
 </template>
 
 <script>
-import get from 'lodash/get'
-
 export default {
   name: 'Tour',
   data () {
@@ -20,21 +18,9 @@ export default {
         header: {
           title: 'Second step',
         },
-        content: 'Use different views: List, Grid and Table'
-      }],
-      callbacks: {
-        onNextStep: this.onNextStep
-      }
-    }
-  },
-  computed: {
-    steps () {
-      return get(this.allSteps, this.$route.name, [])
-    }
-  },
-  methods: {
-    onNextStep (currentStep) {
-      if (currentStep === 0) this.$router.push({ name: 'search' })
+        content: 'Use different views: List, Grid and Table',
+        before: _ => new Promise(resolve => resolve(this.$router.push({ name: 'search' })))
+      }]
     }
   },
   mounted () {
