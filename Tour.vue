@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import map from 'lodash/map'
+
 export default {
   name: 'Tour',
   data () {
@@ -57,8 +59,7 @@ export default {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
       if (this.currentStep === 0) {
         await new Promise(resolve => resolve(this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() })))
-        this.initialSteps[1].target = document.querySelector(this.initialSteps[1].selector)
-        this.steps.push(this.initialSteps[1])
+        this.updateSteps()
         await this.$nextTick()
       }
       await this.$set(this, 'currentStep', this.currentStep + 1)
@@ -67,11 +68,19 @@ export default {
     async onSkip () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', -1)
+    },
+    updateSteps () {
+      map(this.initialSteps, step => {
+        const element = document.querySelector(step.selector)
+        if (element) {
+          step.target = element
+          this.steps.push(step)
+        }
+      })
     }
   },
   async mounted () {
-    this.initialSteps[0].target = document.querySelector(this.initialSteps[0].selector)
-    this.steps.push(this.initialSteps[0])
+    this.updateSteps()
     this.onNext()
   }
 }
