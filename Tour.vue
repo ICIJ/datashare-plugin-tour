@@ -1,17 +1,22 @@
 <template>
-  <div class="text-center my-3">
+  <div class="my-3">
     <div v-for="(step, index) in steps" :key="index">
       <b-popover :target="step.target" :placement="step.placement" ref="steps">
         <template v-slot:title>
           <span v-if="step.title" v-html="step.title"></span>
         </template>
         <span v-if="step.content" v-html="step.content"></span>
-        <div>
-          <b-btn variant="outline-light" @click="onPrevious">
+        <div class="mt-3 mb-1">
+          <b-btn variant="outline-light" @click="onPrevious" class="mr-1" v-if="index !== 0">
             Previous
           </b-btn>
-          <b-btn variant="outline-light" @click="onNext">
-            Next
+          <b-btn variant="outline-light" @click="onNext" class="ml-1">
+            <span v-if="index === (steps.length - 1)">
+              Finish
+            </span>
+            <span v-else>
+              Next
+            </span>
           </b-btn>
         </div>
       </b-popover>
