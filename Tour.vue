@@ -33,7 +33,18 @@ export default {
   data () {
     return {
       steps: [],
-      currentStep: -1
+      currentStep: -1,
+      initialSteps: [{
+        selector: '.project-cards__item',
+        title: 'First step',
+        content: 'This is my content',
+        placement: 'top'
+      }, {
+        selector: '.search-layout-selector__button:nth-child(3)',
+        title: 'Second step',
+        content: 'This is another content',
+        placement: 'top'
+      }]
     }
   },
   methods: {
@@ -45,15 +56,9 @@ export default {
     async onNext () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
       if (this.currentStep === 0) {
-        await new Promise(resolve => {
-          resolve(this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }))
-        })
-        this.steps.push({
-          target: document.querySelector('.search-layout-selector__button:nth-child(3)'),
-          title: 'Second step',
-          content: 'This is another content',
-          placement: 'top'
-        })
+        await new Promise(resolve => resolve(this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() })))
+        this.initialSteps[1].target = document.querySelector(this.initialSteps[1].selector)
+        this.steps.push(this.initialSteps[1])
         await this.$nextTick()
       }
       await this.$set(this, 'currentStep', this.currentStep + 1)
@@ -65,13 +70,8 @@ export default {
     }
   },
   async mounted () {
-    const steps = [{
-      target: document.querySelector('.project-cards__item'),
-      title: 'First step',
-      content: 'This is my content',
-      placement: 'top'
-    }]
-    await this.$set(this, 'steps', steps)
+    this.initialSteps[0].target = document.querySelector(this.initialSteps[0].selector)
+    this.steps.push(this.initialSteps[0])
     this.onNext()
   }
 }
