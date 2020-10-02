@@ -7,7 +7,10 @@
         </template>
         <span v-if="step.content" v-html="step.content"></span>
         <div class="mt-3 mb-1">
-          <b-btn variant="outline-light" @click="onPrevious" class="mr-1" v-if="index !== 0">
+          <b-btn variant="outline-light" @click="onSkip" class="mr-1">
+            Skip tour
+          </b-btn>
+          <b-btn variant="outline-light" @click="onPrevious" class="ml-1 mr-1" v-if="index !== 0">
             Previous
           </b-btn>
           <b-btn variant="outline-light" @click="onNext" class="ml-1">
@@ -43,6 +46,10 @@ export default {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', this.currentStep + 1)
       if (this.currentStep < this.$refs.steps.length) this.$refs.steps[this.currentStep].$emit('open')
+    },
+    async onSkip () {
+      if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
+      await this.$set(this, 'currentStep', -1)
     }
   },
   async mounted () {
