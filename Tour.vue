@@ -44,6 +44,18 @@ export default {
     },
     async onNext () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
+      if (this.currentStep === 0) {
+        await new Promise(resolve => {
+          resolve(this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }))
+        })
+        this.steps.push({
+          target: document.querySelector('.search-layout-selector__button:nth-child(3)'),
+          title: 'Second step',
+          content: 'This is another content',
+          placement: 'top'
+        })
+        await this.$nextTick()
+      }
       await this.$set(this, 'currentStep', this.currentStep + 1)
       if (this.currentStep < this.$refs.steps.length) this.$refs.steps[this.currentStep].$emit('open')
     },
@@ -58,16 +70,6 @@ export default {
       title: 'First step',
       content: 'This is my content',
       placement: 'top'
-    }, {
-      target: document.querySelector('.search-bar__submit'),
-      title: 'Second step',
-      content: 'This is another content',
-      placement: 'top'
-    }, {
-      target: document.querySelector('.app-sidebar__container__toggle'),
-      title: 'Third step',
-      content: 'This is the last content',
-      placement: 'right'
     }]
     await this.$set(this, 'steps', steps)
     this.onNext()
