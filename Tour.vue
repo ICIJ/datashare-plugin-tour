@@ -10,7 +10,7 @@
           <b-btn variant="outline-light" @click="onSkip" class="mr-1">
             Skip tour
           </b-btn>
-          <b-btn variant="outline-light" @click="onPrevious" class="ml-1 mr-1" v-if="index !== 0">
+          <b-btn variant="outline-light" @click="onPrevious" class="ml-1 mr-1">
             Previous
           </b-btn>
           <b-btn variant="outline-light" @click="onNext" class="ml-1">
@@ -41,16 +41,29 @@ export default {
         content: 'Enter a project like Luxleaks !',
         placement: 'bottom'
       }, {
+        before: () => new Promise(resolve => resolve(this.$router.push({ name: 'search' }))),
         selector: '.search-layout-selector__button:nth-child(3)',
         content: 'Use different views: List, Grid and Table.',
-        placement: 'bottomleft'
+        placement: 'bottomleft',
+        action: () => document.querySelector('.search-layout-selector__button:nth-child(3)').click()
       }, {
         selector: '.filters-panel__sticky__toolbar__toggler',
         content: 'Want to better see your documents?<br>Hide the Menu and Filters columns to make room!',
         placement: 'right'
       }, {
-        selector: '.filter:nth-child(7)',
+        selector: '.filter:nth-child(10)',
         content: 'Contextualize your filters can be useful!<br>Open Languages and select German.',
+        placement: 'right',
+        action: () => {
+          document.querySelector('.filter:nth-child(10) h6').click()
+          setTimeout(() => {
+            document.querySelector('.filter:nth-child(10) .filter__items__item:nth-child(2) .custom-control-input').click()
+          }, 300)
+        }
+      }, {
+        before: () => new Promise(resolve => resolve(this.$router.push({ name: 'user-history' }))),
+        selector: '.app-sidebar__container__menu__item:nth-child(4)',
+        content: 'At any time, if you’re lost in your searches, go see Your History here :slight_smile:',
         placement: 'right'
       }]
     }
@@ -63,13 +76,16 @@ export default {
     },
     async onNext () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
-      if (this.currentStep === 0) {
-        await new Promise(resolve => resolve(this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() })))
+      await this.$set(this, 'currentStep', this.currentStep + 1)
+      if (this.steps[this.currentStep].before) {
+        await this.steps[this.currentStep].before()
         this.updateSteps()
         await this.$nextTick()
       }
-      await this.$set(this, 'currentStep', this.currentStep + 1)
       if (this.currentStep < this.$refs.steps.length) this.$refs.steps[this.currentStep].$emit('open')
+      if (this.steps[this.currentStep].action) {
+        await this.steps[this.currentStep].action()
+      }
     },
     async onSkip () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
@@ -78,10 +94,8 @@ export default {
     updateSteps () {
       map(this.initialSteps, step => {
         const element = document.querySelector(step.selector)
-        if (element) {
-          step.target = element
-          this.steps.push(step)
-        }
+        step.target = element
+        this.steps.push(step)
       })
     }
   },
