@@ -7,20 +7,20 @@
         </template>
         <div v-if="step.content" v-html="step.content" class="text-center"></div>
         <div class="mt-3 mb-1 text-center">
-          <b-btn variant="outline-light" @click="onSkip" class="mr-1">
-            Skip tour
-          </b-btn>
-          <b-btn variant="outline-light" @click="onPrevious" class="ml-1 mr-1">
-            Previous
-          </b-btn>
-          <b-btn variant="outline-light" @click="onNext" class="ml-1">
-            <span v-if="index === (steps.length - 1)">
+          <b-btn-group>
+            <b-btn variant="outline-light" @click="onSkip">
+              Skip tour
+            </b-btn>
+            <b-btn variant="outline-light" @click="onPrevious">
+              Previous
+            </b-btn>
+            <b-btn variant="outline-light" @click="onFinish" v-if="index === (steps.length - 1)">
               Finish
-            </span>
-            <span v-else>
+            </b-btn>
+            <b-btn variant="outline-light" @click="onNext" v-else>
               Next
-            </span>
-          </b-btn>
+            </b-btn>
+          </b-btn-group>
         </div>
       </b-popover>
     </div>
@@ -75,23 +75,29 @@ export default {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('open')
     },
     async onNext () {
-      if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
+      if (this.$refs.steps && this.$refs.steps[this.currentStep]) this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', this.currentStep + 1)
-      if (this.steps[this.currentStep].before) {
-        await this.steps[this.currentStep].before()
-        this.updateSteps()
-        await this.$nextTick()
+      if (this.currentStep < this.$refs.steps.length) {
+        if (this.steps[this.currentStep].before) {
+          await this.steps[this.currentStep].before()
+          this.updateSteps()
+          await this.$nextTick()
+        }
+        this.$refs.steps[this.currentStep].$emit('open')
+        if (this.steps[this.currentStep].action) {
+          await this.steps[this.currentStep].action()
+        }
       }
-      if (this.currentStep < this.$refs.steps.length) this.$refs.steps[this.currentStep].$emit('open')
-      if (this.steps[this.currentStep].action) {
-        await this.steps[this.currentStep].action()
-      }
+    },
+    async onFinish () {
+      this.$refs.steps[this.currentStep].$emit('close')
     },
     async onSkip () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', -1)
     },
     updateSteps () {
+      this.$set(this, 'steps', [])
       map(this.initialSteps, step => {
         const element = document.querySelector(step.selector)
         step.target = element
