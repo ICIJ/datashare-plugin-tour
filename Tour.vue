@@ -5,8 +5,8 @@
         <template v-slot:title>
           <span v-if="step.title" v-html="step.title"></span>
         </template>
-        <span v-if="step.content" v-html="step.content"></span>
-        <div class="mt-3 mb-1">
+        <div v-if="step.content" v-html="step.content" class="text-center"></div>
+        <div class="mt-3 mb-1 text-center">
           <b-btn variant="outline-light" @click="onSkip" class="mr-1">
             Skip tour
           </b-btn>
@@ -37,15 +37,21 @@ export default {
       steps: [],
       currentStep: -1,
       initialSteps: [{
-        selector: '.project-cards__item',
-        title: 'First step',
-        content: 'This is my content',
-        placement: 'top'
+        selector: '.project-cards__item:nth-child(1)',
+        content: 'Enter a project like Luxleaks !',
+        placement: 'bottom'
       }, {
         selector: '.search-layout-selector__button:nth-child(3)',
-        title: 'Second step',
-        content: 'This is another content',
-        placement: 'top'
+        content: 'Use different views: List, Grid and Table.',
+        placement: 'bottomleft'
+      }, {
+        selector: '.filters-panel__sticky__toolbar__toggler',
+        content: 'Want to better see your documents?<br>Hide the Menu and Filters columns to make room!',
+        placement: 'right'
+      }, {
+        selector: '.filter:nth-child(7)',
+        content: 'Contextualize your filters can be useful!<br>Open Languages and select German.',
+        placement: 'right'
       }]
     }
   },
