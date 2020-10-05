@@ -41,7 +41,10 @@ export default {
         content: 'Enter a project like Luxleaks !',
         placement: 'bottom'
       }, {
-        before: () => new Promise(resolve => resolve(this.$router.push({ name: 'search' }))),
+        before: () => {
+          this.$store.commit('search/resetFilterValues')
+          return new Promise(resolve => resolve(this.$router.push({ name: 'search' })))
+        },
         selector: '.search-layout-selector__button:nth-child(3)',
         content: 'Use different views: List, Grid and Table.',
         placement: 'bottomleft',
