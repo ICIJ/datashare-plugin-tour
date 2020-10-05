@@ -5,19 +5,19 @@
         <template v-slot:title>
           <span v-if="step.title" v-html="step.title"></span>
         </template>
-        <div v-if="step.content" v-html="step.content" class="text-center"></div>
-        <div class="mt-3 mb-1 text-center">
+        <div v-if="step.content" v-html="step.content"></div>
+        <div class="mt-4 mb-1">
           <b-btn-group>
-            <b-btn variant="outline-light" @click="onSkip">
+            <b-btn @click="onSkip">
               Skip tour
             </b-btn>
-            <b-btn variant="outline-light" @click="onPrevious">
+            <b-btn @click="onPrevious" v-if="index !== 0">
               Previous
             </b-btn>
-            <b-btn variant="outline-light" @click="onFinish" v-if="index === (steps.length - 1)">
+            <b-btn @click="onFinish" v-if="index === (steps.length - 1)">
               Finish
             </b-btn>
-            <b-btn variant="outline-light" @click="onNext" v-else>
+            <b-btn @click="onNext" v-else>
               Next
             </b-btn>
           </b-btn-group>
@@ -38,6 +38,7 @@ export default {
       currentStep: -1,
       initialSteps: [{
         selector: '.project-cards__item:nth-child(1)',
+        title: 'Projects',
         content: 'Enter a project like Luxleaks !',
         placement: 'bottom'
       }, {
@@ -46,15 +47,18 @@ export default {
           return new Promise(resolve => resolve(this.$router.push({ name: 'search' })))
         },
         selector: '.search-layout-selector__button:nth-child(3)',
+        title: 'Views',
         content: 'Use different views: List, Grid and Table.',
         placement: 'bottomleft',
         action: () => document.querySelector('.search-layout-selector__button:nth-child(3)').click()
       }, {
         selector: '.filters-panel__sticky__toolbar__toggler',
+        title: 'Menus',
         content: 'Want to better see your documents?<br>Hide the Menu and Filters columns to make room!',
         placement: 'right'
       }, {
         selector: '.filter:nth-child(10)',
+        title: 'Filters',
         content: 'Contextualize your filters can be useful!<br>Open Languages and select German.',
         placement: 'right',
         action: () => {
@@ -66,7 +70,8 @@ export default {
       }, {
         before: () => new Promise(resolve => resolve(this.$router.push({ name: 'user-history' }))),
         selector: '.app-sidebar__container__menu__item:nth-child(4)',
-        content: 'At any time, if you’re lost in your searches, go see Your History here :slight_smile:',
+        title: 'History',
+        content: 'At any time, if you’re lost in your searches, go see Your History here',
         placement: 'right'
       }]
     }
@@ -114,3 +119,38 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.popover-body,
+.popover-header {
+  background-color: #1a1a1e;
+  border-radius: 0;
+  padding: 1rem 1.5rem;
+
+  .btn {
+    background-color: transparent;
+    border-color: transparent;
+
+    &:hover {
+      background-color: #25252a;
+    }
+  }
+}
+
+.popover-header {
+  font-size: large;
+  padding-bottom: 0;
+}
+
+.popover.bs-popover-auto[x-placement^="bottom"] > .arrow::after,
+.popover.bs-popover-bottom > .arrow::after {
+  border-bottom-color: #1a1a1e;
+}
+
+.bs-popover-auto[x-placement^="right"] > .arrow::after,
+.bs-popover-auto[x-placement^="right"] > .arrow::before,
+.bs-popover-right > .arrow::after,
+.bs-popover-right > .arrow::before {
+  border-right-color: #1a1a1e;
+}
+</style>
