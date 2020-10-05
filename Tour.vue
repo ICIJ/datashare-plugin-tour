@@ -4,13 +4,13 @@
       <b-popover :target="step.target" :placement="step.placement" ref="steps">
         <template v-slot:title>
           <span v-if="step.title" v-html="step.title"></span>
+          <b-btn v-if="step.title" class="float-right py-0" @click="onFinish">
+            x
+          </b-btn>
         </template>
         <div v-if="step.content" v-html="step.content"></div>
-        <div class="mt-4 mb-1">
+        <div class="mt-4 mb-1 text-center">
           <b-btn-group>
-            <b-btn @click="onSkip">
-              Skip tour
-            </b-btn>
             <b-btn @click="onPrevious" v-if="index !== 0">
               Previous
             </b-btn>
@@ -98,11 +98,8 @@ export default {
       }
     },
     async onFinish () {
-      this.$refs.steps[this.currentStep].$emit('close')
-    },
-    async onSkip () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
-      await this.$set(this, 'currentStep', -1)
+      this.$set(this, 'currentStep', -1)
     },
     updateSteps () {
       this.$set(this, 'steps', [])
