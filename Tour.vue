@@ -1,7 +1,7 @@
 <template>
   <div class="my-3">
     <div v-for="(step, index) in steps" :key="index">
-      <b-popover :target="step.target" :placement="step.placement" ref="steps">
+      <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step">
         <template v-slot:title>
           <span v-if="step.title" v-html="step.title"></span>
           <b-btn v-if="step.title" class="float-right py-0" @click="onFinish">
@@ -135,36 +135,45 @@ export default {
 </script>
 
 <style lang="scss">
-.popover-body,
-.popover-header {
-  background-color: #1a1a1e;
-  border-radius: 0;
-  padding: 1rem 1.5rem;
+.tour-step {
+  .popover-body,
+  .popover-header {
+    background-color: #1a1a1e;
+    border-radius: 0;
+    padding: 1rem 1.5rem;
 
-  .btn {
-    background-color: transparent;
-    border-color: transparent;
+    .btn {
+      background-color: transparent;
+      border-color: transparent;
 
-    &:hover {
-      background-color: #25252a;
+      &:hover {
+        background-color: #25252a;
+      }
     }
   }
-}
 
-.popover-header {
-  font-size: large;
-  padding-bottom: 0;
-}
+  .popover-header {
+    font-size: large;
+    padding-bottom: 0;
+  }
 
-.popover.bs-popover-auto[x-placement^="bottom"] > .arrow::after,
-.popover.bs-popover-bottom > .arrow::after {
-  border-bottom-color: #1a1a1e;
-}
+  .popover-body {
+    .btn {
+      background-color: #25252a;
+      margin-right: 5px;
+    }
+  }
 
-.bs-popover-auto[x-placement^="right"] > .arrow::after,
-.bs-popover-auto[x-placement^="right"] > .arrow::before,
-.bs-popover-right > .arrow::after,
-.bs-popover-right > .arrow::before {
-  border-right-color: #1a1a1e;
+  .popover.bs-popover-auto[x-placement^="bottom"] > .arrow::after,
+  .popover.bs-popover-bottom > .arrow::after {
+    border-bottom-color: #1a1a1e;
+  }
+
+  .bs-popover-auto[x-placement^="right"] > .arrow::after,
+  .bs-popover-auto[x-placement^="right"] > .arrow::before,
+  .bs-popover-right > .arrow::after,
+  .bs-popover-right > .arrow::before {
+    border-right-color: #1a1a1e;
+  }
 }
 </style>
