@@ -80,19 +80,21 @@ export default {
     }
   },
   methods: {
+    async goToPage (pageName) {
+      if (pageName) {
+        const currentName = this.$router.currentRoute.name
+        if (currentName !== pageName) {
+          await this.$router.push({ name: pageName })
+          this.updateSteps()
+          await this.$nextTick()
+        }
+      }
+    },
     async onPrevious () {
       this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', this.currentStep - 1)
       if (this.currentStep >= 0) {
-        if (this.steps[this.currentStep].page) {
-          const currentName = this.$router.currentRoute.name
-          const name = this.steps[this.currentStep].page
-          if (currentName !== name) {
-            await this.$router.push({ name })
-            this.updateSteps()
-            await this.$nextTick()
-          }
-        }
+        await this.goToPage(this.steps[this.currentStep].page)
         this.$refs.steps[this.currentStep].$emit('open')
       }
     },
@@ -100,15 +102,7 @@ export default {
       if (this.$refs.steps && this.$refs.steps[this.currentStep]) this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', this.currentStep + 1)
       if (this.currentStep < this.$refs.steps.length) {
-        if (this.steps[this.currentStep].page) {
-          const currentName = this.$router.currentRoute.name
-          const name = this.steps[this.currentStep].page
-          if (currentName !== name) {
-            await this.$router.push({ name })
-            this.updateSteps()
-            await this.$nextTick()
-          }
-        }
+        await this.goToPage(this.steps[this.currentStep].page)
         if (this.steps[this.currentStep].before) {
           await this.steps[this.currentStep].before()
           this.updateSteps()
