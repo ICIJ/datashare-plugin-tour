@@ -40,39 +40,42 @@ export default {
         selector: '.project-cards__item:nth-child(1)',
         title: 'Projects',
         content: 'Enter a project like Luxleaks !',
-        placement: 'bottom'
+        placement: 'bottom',
+        page: 'landing'
       }, {
         before: () => {
-          this.$store.commit('search/resetFilterValues')
-          return new Promise(resolve => resolve(this.$router.push({ name: 'search' })))
+          return this.$store.commit('search/resetFilterValues')
         },
         selector: '.search-layout-selector__button:nth-child(3)',
         title: 'Views',
         content: 'Use different views: List, Grid and Table.',
         placement: 'bottomleft',
+        page: 'search',
         action: () => document.querySelector('.search-layout-selector__button:nth-child(3)').click()
       }, {
         selector: '.filters-panel__sticky__toolbar__toggler',
         title: 'Menus',
         content: 'Want to better see your documents?<br>Hide the Menu and Filters columns to make room!',
-        placement: 'right'
+        placement: 'right',
+        page: 'search'
       }, {
         selector: '.filter:nth-child(10)',
         title: 'Filters',
         content: 'Contextualize your filters can be useful!<br>Open Languages and select German.',
         placement: 'right',
+        page: 'search',
         action: () => {
           document.querySelector('.filter:nth-child(10) h6').click()
           setTimeout(() => {
-            document.querySelector('.filter:nth-child(10) .filter__items__item:nth-child(2) .custom-control-input').click()
+            document.querySelector('.filter:nth-child(10) .filter__items__item:nth-child(3) .custom-control-input').click()
           }, 300)
         }
       }, {
-        before: () => new Promise(resolve => resolve(this.$router.push({ name: 'user-history' }))),
         selector: '.app-sidebar__container__menu__item:nth-child(4)',
         title: 'History',
         content: 'At any time, if you’re lost in your searches, go see Your History here',
-        placement: 'right'
+        placement: 'right',
+        page: 'user-history'
       }]
     }
   },
@@ -80,12 +83,32 @@ export default {
     async onPrevious () {
       this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', this.currentStep - 1)
-      if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('open')
+      if (this.currentStep >= 0) {
+        if (this.steps[this.currentStep].page) {
+          const currentName = this.$router.currentRoute.name
+          const name = this.steps[this.currentStep].page
+          if (currentName !== name) {
+            await this.$router.push({ name })
+            this.updateSteps()
+            await this.$nextTick()
+          }
+        }
+        this.$refs.steps[this.currentStep].$emit('open')
+      }
     },
     async onNext () {
       if (this.$refs.steps && this.$refs.steps[this.currentStep]) this.$refs.steps[this.currentStep].$emit('close')
       await this.$set(this, 'currentStep', this.currentStep + 1)
       if (this.currentStep < this.$refs.steps.length) {
+        if (this.steps[this.currentStep].page) {
+          const currentName = this.$router.currentRoute.name
+          const name = this.steps[this.currentStep].page
+          if (currentName !== name) {
+            await this.$router.push({ name })
+            this.updateSteps()
+            await this.$nextTick()
+          }
+        }
         if (this.steps[this.currentStep].before) {
           await this.steps[this.currentStep].before()
           this.updateSteps()
