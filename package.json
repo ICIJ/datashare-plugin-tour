@@ -19,7 +19,7 @@
   "scripts": {
     "test:e2e": "nightwatch",
     "test:pack": "mkdir -p ./tmp && cat \"$(npm pack)\" | tar zxvf - -C ./tmp",
-    "test:datashare": "datashare --tcpListenPort 8008 --pluginsDir=$(pwd)/tmp",
+    "test:datashare": "DS_DOCKER_MULTIPLE_PROJECTS=true datashare --tcpListenPort 8008 --pluginsDir=$(pwd)/tmp",
     "test:clean": "rm *.tgz || /bin/true",
     "test": "yarn test:e2e",
     "pretest": "yarn build && yarn test:pack",
@@ -33,6 +33,6 @@
     "filenameHashing": false
   },
   "files": [
-    "dist/{css,js}/*.{css,js,map}"
+    "dist/*.{css,js,map}"
   ]
 }

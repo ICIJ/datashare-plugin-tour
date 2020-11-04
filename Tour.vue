@@ -1,26 +1,22 @@
 <template>
   <div class="my-3">
     <div v-for="(step, index) in steps" :key="index">
-      <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step">
-        <template v-slot:title>
-          <span v-if="step.title" v-html="step.title"></span>
-          <b-btn v-if="step.title" class="float-right py-0" @click="onFinish">
-            x
-          </b-btn>
-        </template>
+      <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
+
         <div v-if="step.content" v-html="step.content"></div>
-        <div class="mt-4 mb-1 text-center">
-          <b-btn-group>
-            <b-btn @click="onPrevious" v-if="index !== 0">
-              Previous
-            </b-btn>
-            <b-btn @click="onFinish" v-if="index === (steps.length - 1)">
-              Finish
-            </b-btn>
-            <b-btn @click="onNext" v-else>
-              Next
-            </b-btn>
-          </b-btn-group>
+        <div class="mt-4 mb-1 d-flex">
+          <b-btn v-if="step.title" @click="onFinish" variant="link" class="text-light ml-auto mr-1">
+            Skip tour
+          </b-btn>
+          <b-btn @click="onPrevious" v-if="index !== 0" variant="light" class="font-weight-bold mr-1">
+            Back
+          </b-btn>
+          <b-btn @click="onFinish" v-if="index === (steps.length - 1)" variant="light" class="font-weight-bold mr-1">
+            Finish
+          </b-btn>
+          <b-btn @click="onNext" v-else variant="light" class="font-weight-bold">
+            Continue
+          </b-btn>
         </div>
       </b-popover>
     </div>
@@ -136,44 +132,8 @@ export default {
 
 <style lang="scss">
 .tour-step {
-  .popover-body,
-  .popover-header {
-    background-color: #1a1a1e;
-    border-radius: 0;
-    padding: 1rem 1.5rem;
-
-    .btn {
-      background-color: transparent;
-      border-color: transparent;
-
-      &:hover {
-        background-color: #25252a;
-      }
-    }
-  }
-
-  .popover-header {
-    font-size: large;
-    padding-bottom: 0;
-  }
-
-  .popover-body {
-    .btn {
-      background-color: #25252a;
-      margin-right: 5px;
-    }
-  }
-
-  .popover.bs-popover-auto[x-placement^="bottom"] > .arrow::after,
-  .popover.bs-popover-bottom > .arrow::after {
-    border-bottom-color: #1a1a1e;
-  }
-
-  .bs-popover-auto[x-placement^="right"] > .arrow::after,
-  .bs-popover-auto[x-placement^="right"] > .arrow::before,
-  .bs-popover-right > .arrow::after,
-  .bs-popover-right > .arrow::before {
-    border-right-color: #1a1a1e;
-  }
+  width: 400px;
+  color: #fff;
+  font-size: 1.1rem;
 }
 </style>
