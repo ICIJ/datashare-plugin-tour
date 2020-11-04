@@ -69,7 +69,7 @@ export default {
       }, {
         selector: '.app-sidebar__container__menu__item:nth-child(3)',
         title: 'History',
-        content: 'At any time, if you’re lost in your searches, go see Your History here',
+        content: 'Lost in your searches? Go see Your History here!',
         placement: 'right',
         page: 'user-history'
       }]
