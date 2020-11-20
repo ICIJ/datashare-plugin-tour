@@ -1,8 +1,15 @@
 <template>
   <div class="my-3">
+    <b-modal
+        id="modal-datashare-plugin-tour"
+        hide-header
+        hide-footer
+        no-close-on-backdrop
+        body-bg-variant="transparent"
+        content-class="bg-transparent shadow-none"
+    ></b-modal>
     <div v-for="(step, index) in steps" :key="index">
       <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
-
         <div v-if="step.content" v-html="step.content"></div>
         <div class="mt-4 mb-1 d-flex">
           <b-btn v-if="step.title" @click="onFinish" variant="link" class="text-light ml-auto mr-1">
@@ -24,7 +31,7 @@
 </template>
 
 <script>
-import map from 'lodash/map'
+import { map } from 'lodash'
 
 export default {
   name: 'Tour',
@@ -39,9 +46,7 @@ export default {
         placement: 'bottom',
         page: 'landing'
       }, {
-        before: () => {
-          return this.$store.commit('search/resetFilterValues')
-        },
+        before: () => this.$store.commit('search/resetFilterValues'),
         selector: '.search-layout-selector__button:nth-child(3)',
         title: 'Views',
         content: 'Use different views: List, Grid and Table.',
@@ -112,6 +117,7 @@ export default {
     },
     async onFinish () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
+      this.$bvModal.hide('modal-datashare-plugin-tour')
       this.$set(this, 'currentStep', -1)
     },
     updateSteps () {
@@ -124,16 +130,23 @@ export default {
     }
   },
   async mounted () {
+    this.$bvModal.show('modal-datashare-plugin-tour')
     this.updateSteps()
     this.onNext()
   }
 }
 </script>
 
+<!-- Can not be scoped -->
 <style lang="scss">
-.tour-step {
-  width: 400px;
-  color: #fff;
-  font-size: 1.1rem;
-}
+  .modal-open .app.d-flex {
+    -webkit-filter: blur(1px);
+    filter: blur(1px);
+  }
+
+  .tour-step {
+    color: #fff;
+    font-size: 1.1rem;
+    width: 400px;
+  }
 </style>
