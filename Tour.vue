@@ -1,13 +1,6 @@
 <template>
   <div class="my-3">
-    <b-modal
-        id="modal-datashare-plugin-tour"
-        hide-header
-        hide-footer
-        no-close-on-backdrop
-        body-bg-variant="transparent"
-        content-class="bg-transparent shadow-none"
-    ></b-modal>
+    <div class="overlay w-100 h-100 position-fixed bg-dark" :class="[isStarted ? 'd-block' : 'd-none']"></div>
     <div v-for="(step, index) in steps" :key="index">
       <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
         <div v-if="step.content" v-html="step.content"></div>
@@ -31,13 +24,17 @@
 </template>
 
 <script>
-import { map } from 'lodash'
+import { isNull, map } from 'lodash'
 import { getCookie, setCookie } from 'tiny-cookie'
+
+const COOKIE_NAME = '_ds_plugin_tour'
+const COOKE_DURATION = '1Y'
 
 export default {
   name: 'Tour',
   data () {
     return {
+      isStarted: false,
       steps: [],
       currentStep: -1,
       initialSteps: [{
@@ -118,8 +115,8 @@ export default {
     },
     async onFinish () {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
-      this.$bvModal.hide('modal-datashare-plugin-tour')
       this.$set(this, 'currentStep', -1)
+      this.$set(this, 'isStarted', false)
     },
     updateSteps () {
       this.$set(this, 'steps', [])
@@ -131,11 +128,9 @@ export default {
     }
   },
   async mounted () {
-    const cookieName = '_ds_plugin_tour'
-    const cookie = getCookie(cookieName)
-    if(cookie === null) {
-      setCookie(cookieName, true, { expires: '1Y' })
-      this.$bvModal.show('modal-datashare-plugin-tour')
+    if(isNull(getCookie(COOKIE_NAME))) {
+      this.$set(this, 'isStarted', true)
+      setCookie(COOKIE_NAME, true, { expires: COOKE_DURATION })
       this.updateSteps()
       this.onNext()
     }
@@ -145,9 +140,13 @@ export default {
 
 <!-- Can not be scoped -->
 <style lang="scss">
-  .modal-open .app.d-flex {
-    -webkit-filter: blur(1px);
-    filter: blur(1px);
+  .overlay {
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    right: 0;
+    top: 0;
+    z-index: 1020;
   }
 
   .tour-step {
