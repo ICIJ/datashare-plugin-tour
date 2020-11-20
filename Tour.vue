@@ -32,6 +32,7 @@
 
 <script>
 import { map } from 'lodash'
+import { getCookie, setCookie } from 'tiny-cookie'
 
 export default {
   name: 'Tour',
@@ -130,9 +131,14 @@ export default {
     }
   },
   async mounted () {
-    this.$bvModal.show('modal-datashare-plugin-tour')
-    this.updateSteps()
-    this.onNext()
+    const cookieName = '_ds_plugin_tour'
+    const cookie = getCookie(cookieName)
+    if(cookie === null) {
+      setCookie(cookieName, true, { expires: '1Y' })
+      this.$bvModal.show('modal-datashare-plugin-tour')
+      this.updateSteps()
+      this.onNext()
+    }
   }
 }
 </script>
