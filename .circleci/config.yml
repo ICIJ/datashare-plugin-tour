@@ -30,9 +30,6 @@ jobs:
     executor: global-executor
     steps:
       - checkout-and-install
-      - run:
-          name: Run yarn unit tests
-          command: yarn test:unit
 
   release:
     executor: global-executor
