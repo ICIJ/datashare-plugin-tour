@@ -26,14 +26,6 @@ commands:
           key: yarn-packages-{{ checksum "yarn.lock" }}
 
 jobs:
-  build:
-    executor: global-executor
-    steps:
-      - checkout-and-install
-      - run:
-          name: Run yarn unit tests
-          command: yarn test:unit
-
   release:
     executor: global-executor
     steps:
