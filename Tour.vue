@@ -25,10 +25,8 @@
 
 <script>
 import { isNull, map } from 'lodash'
-import { getCookie, setCookie } from 'tiny-cookie'
 
-const COOKIE_NAME = '_ds_plugin_tour'
-const COOKE_DURATION = '1Y'
+const STORAGE_NAME = '_ds_plugin_tour'
 
 export default {
   name: 'Tour',
@@ -121,16 +119,15 @@ export default {
     updateSteps () {
       this.$set(this, 'steps', [])
       map(this.initialSteps, step => {
-        const element = document.querySelector(step.selector)
-        step.target = element
+        step.target = document.querySelector(step.selector)
         this.steps.push(step)
       })
     }
   },
   async mounted () {
-    if(isNull(getCookie(COOKIE_NAME))) {
+    if(isNull(localStorage.getItem(STORAGE_NAME))) {
       this.$set(this, 'isStarted', true)
-      setCookie(COOKIE_NAME, true, { expires: COOKE_DURATION })
+      localStorage.setItem(STORAGE_NAME, true)
       this.updateSteps()
       this.onNext()
     }
