@@ -38,27 +38,27 @@ export default {
       initialSteps: [{
         selector: '.project-cards__item:nth-child(1)',
         title: 'Projects',
-        content: 'Enter a project like Luxleaks !',
+        content: 'Enter a project, such as Luxleaks!',
         placement: 'bottom',
         page: 'landing'
       }, {
         before: () => this.$store.commit('search/resetFilterValues'),
         selector: '.search-layout-selector__button:nth-child(3)',
         title: 'Views',
-        content: 'Use different views: List, Grid and Table.',
+        content: 'Try different layouts: list, grid and table.',
         placement: 'bottomleft',
         page: 'search',
         action: () => document.querySelector('.search-layout-selector__button:nth-child(3)').click()
       }, {
         selector: '.filters-panel__sticky__toolbar__toggler',
         title: 'Menus',
-        content: 'Want to better see your documents?<br>Hide the Menu and Filters columns to make room!',
+        content: 'Make room by hiding the menu and filters columns!',
         placement: 'right',
         page: 'search'
       }, {
         selector: '.filter:nth-child(10)',
         title: 'Filters',
-        content: 'Contextualize your filters can be useful!<br>Open Languages and select German.',
+        content: 'If you click Contextualize, the search result count for this filter will be updated.',
         placement: 'right',
         page: 'search',
         action: () => {
@@ -70,7 +70,7 @@ export default {
       }, {
         selector: '.app-sidebar__container__menu__item:nth-child(3)',
         title: 'History',
-        content: 'Lost in your searches? Go see Your History here!',
+        content: 'Lost in your searches? Browse your history here!',
         placement: 'right',
         page: 'user-history'
       }]
