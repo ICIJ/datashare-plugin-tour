@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3">
+  <div>
     <spotlight :target="currentStepTarget" v-if="isStarted" :key="currentStepTarget" />
     <div v-for="(step, index) in steps" :key="index">
       <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
@@ -155,17 +155,8 @@ export default {
 }
 </script>
 
-<!-- Can not be scoped -->
-<style lang="scss">
-  .overlay {
-    bottom: 0;
-    left: 0;
-    opacity: 0.5;
-    right: 0;
-    top: 0;
-    z-index: 1020;
-  }
-
+<!-- Can not be scoped since popovers are created outside the component -->
+<style>
   .tour-step {
     color: #fff;
     font-size: 1.1rem;
