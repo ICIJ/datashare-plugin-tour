@@ -56,7 +56,19 @@ export default {
         placement: 'right',
         page: 'search'
       }, {
-        selector: '.filter:nth-child(10)',
+        selector: '.filter:nth-child(7)',
+        title: 'Filters',
+        content: 'Filter your documents. For example, select German.',
+        placement: 'right',
+        page: 'search',
+        action: () => {
+          document.querySelector('.filter:nth-child(7) h6').click()
+          setTimeout(() => {
+            document.querySelector('.filter:nth-child(7) .filter__items__item:nth-child(2) .custom-control-input').click()
+          }, 300)
+        }
+      }, {
+        selector: '.filter:nth-child(7)',
         title: 'Filters',
         content: 'If you click Contextualize, the search result count for this filter will be updated.',
         placement: 'right',
