@@ -1,6 +1,6 @@
 <template>
   <div class="my-3">
-    <div class="overlay w-100 h-100 position-fixed bg-dark" :class="[isStarted ? 'd-block' : 'd-none']"></div>
+    <spotlight :target="currentStepTarget" v-if="isStarted" :key="currentStepTarget" />
     <div v-for="(step, index) in steps" :key="index">
       <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
         <div v-if="step.content" v-html="step.content"></div>
@@ -25,11 +25,15 @@
 
 <script>
 import { isNull, map } from 'lodash'
+import Spotlight from './Spotlight.vue'
 
 const STORAGE_NAME = '_ds_plugin_tour'
 
 export default {
   name: 'Tour',
+  components: {
+    Spotlight
+  },
   data () {
     return {
       isStarted: false,
@@ -133,6 +137,11 @@ export default {
         step.target = document.querySelector(step.selector)
         this.steps.push(step)
       })
+    }
+  },
+  computed: {
+    currentStepTarget () {
+      return this.isStarted ? this.steps[this.currentStep].target : null
     }
   },
   async mounted () {
