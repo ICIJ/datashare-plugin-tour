@@ -56,28 +56,27 @@ export default {
         placement: 'right',
         page: 'search'
       }, {
-        selector: '.filter:nth-child(7)',
+        selector: '.filter:nth-child(8)',
         title: 'Filters',
         content: 'Filter your documents. For example, select German.',
         placement: 'right',
         page: 'search',
         action: () => {
-          document.querySelector('.filter:nth-child(7) h6').click()
+          document.querySelector('.filter:nth-child(8) h6').click()
           setTimeout(() => {
-            document.querySelector('.filter:nth-child(7) .filter__items__item:nth-child(2) .custom-control-input').click()
-          }, 300)
+            document.querySelector('.filter:nth-child(8) .filter__items__item:nth-child(3) .custom-control-input').click()
+          }, 800)
         }
       }, {
-        selector: '.filter:nth-child(7)',
+        selector: '.filter:nth-child(8)',
         title: 'Filters',
         content: 'If you click Contextualize, the search result count for this filter will be updated.',
         placement: 'right',
         page: 'search',
         action: () => {
-          document.querySelector('.filter:nth-child(10) h6').click()
           setTimeout(() => {
-            document.querySelector('.filter:nth-child(10) .filter__items__item:nth-child(3) .custom-control-input').click()
-          }, 300)
+            document.querySelector('.filter:nth-child(8) .filter__footer__action--contextualize .custom-control-input').click()
+          }, 500)
         }
       }, {
         selector: '.app-sidebar__container__menu__item:nth-child(3)',
