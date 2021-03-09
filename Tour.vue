@@ -130,6 +130,7 @@ export default {
       if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
       this.$set(this, 'currentStep', -1)
       this.$set(this, 'isStarted', false)
+      localStorage.setItem(STORAGE_NAME, true)
     },
     updateSteps () {
       this.$set(this, 'steps', [])
@@ -147,7 +148,6 @@ export default {
   async mounted () {
     if(isNull(localStorage.getItem(STORAGE_NAME))) {
       this.$set(this, 'isStarted', true)
-      localStorage.setItem(STORAGE_NAME, true)
       this.updateSteps()
       this.onNext()
     }
