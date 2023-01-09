@@ -5,8 +5,8 @@
   "main": "dist/index.umd.min.js",
   "style": "dist/index.css",
   "dependencies": {
-    "node-sass": "^4.14.1",
-    "sass-loader": "^10.0.2"
+    "node-sass": "^8.0.0",
+    "sass-loader": "^13.2.0"
   },
   "devDependencies": {
     "@vue/cli": "^4.2.3",
