@@ -102,35 +102,42 @@ export default {
         }
       }
     },
+    open(){
+      this.$refs.steps?.[this.currentStep]?.$emit('open')
+    },
+    close(){
+      this.$refs.steps?.[this.currentStep]?.$emit('close')
+    },
     async onPrevious () {
-      this.$refs.steps[this.currentStep].$emit('close')
+      this.close()
       await this.$set(this, 'currentStep', this.currentStep - 1)
       if (this.currentStep >= 0) {
         await this.goToPage(this.steps[this.currentStep].page)
-        this.$refs.steps[this.currentStep].$emit('open')
+        this.open()
       }
     },
     async onNext () {
-      if (this.$refs.steps && this.$refs.steps[this.currentStep]) this.$refs.steps[this.currentStep].$emit('close')
+      this.close()
       await this.$set(this, 'currentStep', this.currentStep + 1)
-      if (this.currentStep < this.$refs.steps.length) {
+      if (this.currentStep < this.$refs.steps?.length && this.currentStep >= 0) {
         await this.goToPage(this.steps[this.currentStep].page)
         if (this.steps[this.currentStep].before) {
           await this.steps[this.currentStep].before()
           this.updateSteps()
           await this.$nextTick()
         }
-        this.$refs.steps[this.currentStep].$emit('open')
+        this.$refs.steps?.[this.currentStep]?.$emit('open')
         if (this.steps[this.currentStep].action) {
-          await this.steps[this.currentStep].action()
+         await this.steps[this.currentStep].action()
         }
       }
     },
     async onFinish () {
-      if (this.currentStep >= 0) this.$refs.steps[this.currentStep].$emit('close')
-      this.$set(this, 'currentStep', -1)
+      this.close()
       this.$set(this, 'isStarted', false)
-      localStorage.setItem(STORAGE_NAME, true)
+      this.$set(this, 'currentStep', -1)
+      this.$set(this, 'steps', [])
+      localStorage.setItem(STORAGE_NAME, "true")
     },
     updateSteps () {
       this.$set(this, 'steps', [])
@@ -142,10 +149,10 @@ export default {
   },
   computed: {
     currentStepTarget () {
-      return this.isStarted ? this.steps[this.currentStep].target : null
+      return this.isStarted ? this.steps[this.currentStep]?.target : null
     }
   },
-  async mounted () {
+  mounted () {
     if(isNull(localStorage.getItem(STORAGE_NAME))) {
       this.$set(this, 'isStarted', true)
       this.updateSteps()
