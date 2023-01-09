@@ -3,7 +3,8 @@ export default {
   name: 'Spotlight',
   props: {
     target: {
-      type: Object
+      type: Object,
+      default: () => {}
     }
   },
   data () {
