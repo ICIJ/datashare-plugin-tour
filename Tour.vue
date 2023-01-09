@@ -1,8 +1,8 @@
 <template>
   <div>
     <spotlight :target="currentStepTarget" v-if="isStarted" :key="currentStepTarget" />
-    <div v-for="(step, index) in steps" :key="index">
-      <b-popover :target="step.target" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
+    <div v-for="(step, index) in initialSteps" :key="index">
+      <b-popover :target="currentStepTarget" :placement="step.placement" ref="steps" customClass="tour-step popover-magnified-info">
         <div v-if="step.content" v-html="step.content"></div>
         <div class="mt-4 mb-1 d-flex">
           <b-btn v-if="step.title" @click="onFinish" variant="link" class="text-light ml-auto mr-1">
@@ -11,7 +11,7 @@
           <b-btn @click="onPrevious" v-if="index !== 0" variant="light" class="font-weight-bold mr-1">
             Back
           </b-btn>
-          <b-btn @click="onFinish" v-if="index === (steps.length - 1)" variant="light" class="font-weight-bold mr-1">
+          <b-btn @click="onFinish" v-if="index === (initialSteps.length - 1)" variant="light" class="font-weight-bold mr-1">
             Finish
           </b-btn>
           <b-btn @click="onNext" v-else variant="light" class="font-weight-bold">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { isNull, map } from 'lodash'
+import { isNull } from 'lodash'
 import Spotlight from './Spotlight.vue'
 
 const STORAGE_NAME = '_ds_plugin_tour'
@@ -37,8 +37,7 @@ export default {
   data () {
     return {
       isStarted: false,
-      steps: [],
-      currentStep: -1,
+      currentStep: 0,
       initialSteps: [{
         selector: '.project-cards__item:nth-child(1)',
         title: 'Projects',
@@ -52,7 +51,9 @@ export default {
         content: 'Try different layouts: list, grid and table.',
         placement: 'bottomleft',
         page: 'search',
-        action: () => document.querySelector('.search-layout-selector__button:nth-child(3)').click()
+        action: () => {
+          document.querySelector('.search-layout-selector__button:nth-child(3)').click()
+        }
       }, {
         selector: '.filters-panel__sticky__toolbar__toggler',
         title: 'Menus',
@@ -92,71 +93,58 @@ export default {
     }
   },
   methods: {
-    async goToPage (pageName) {
+    open(){ this.$refs.steps[this.currentStep].$emit('open') },
+    close(){  this.$refs.steps[this.currentStep].$emit('close') },
+    async onPrevious () {
+      await this.showPage(Math.max(this.currentStep - 1,0))
+    },
+    async onNext () {
+      await this.showPage(Math.min(this.currentStep + 1, this.initialSteps.length-1) )
+    },
+    async onFinish () {
+      this.close()
+      this.isStarted = false
+      localStorage.setItem(STORAGE_NAME, "true")
+    },
+    async showPage(stepNumber){
+      this.close()
+      await this.goToPage(stepNumber)
+      await this.renderStep(stepNumber)
+    },
+    async goToPage (stepNumber) {
+      const pageName = this.initialSteps[stepNumber].page
       if (pageName) {
         const currentName = this.$router.currentRoute.name
         if (currentName !== pageName) {
           await this.$router.push({ name: pageName })
-          this.updateSteps()
           await this.$nextTick()
         }
       }
     },
-    open(){
-      this.$refs.steps?.[this.currentStep]?.$emit('open')
-    },
-    close(){
-      this.$refs.steps?.[this.currentStep]?.$emit('close')
-    },
-    async onPrevious () {
-      this.close()
-      await this.$set(this, 'currentStep', this.currentStep - 1)
-      if (this.currentStep >= 0) {
-        await this.goToPage(this.steps[this.currentStep].page)
-        this.open()
-      }
-    },
-    async onNext () {
-      this.close()
-      await this.$set(this, 'currentStep', this.currentStep + 1)
-      if (this.currentStep < this.$refs.steps?.length && this.currentStep >= 0) {
-        await this.goToPage(this.steps[this.currentStep].page)
-        if (this.steps[this.currentStep].before) {
-          await this.steps[this.currentStep].before()
-          this.updateSteps()
-          await this.$nextTick()
-        }
-        this.$refs.steps?.[this.currentStep]?.$emit('open')
-        if (this.steps[this.currentStep].action) {
-         await this.steps[this.currentStep].action()
-        }
-      }
-    },
-    async onFinish () {
-      this.close()
-      this.$set(this, 'isStarted', false)
-      this.$set(this, 'currentStep', -1)
-      this.$set(this, 'steps', [])
-      localStorage.setItem(STORAGE_NAME, "true")
-    },
-    updateSteps () {
-      this.$set(this, 'steps', [])
-      map(this.initialSteps, step => {
-        step.target = document.querySelector(step.selector)
-        this.steps.push(step)
-      })
+    async renderStep(stepNumber){
+      this.currentStep = stepNumber
+      if (this.actualStep.before) { await this.actualStep.before() }
+      await this.$nextTick()
+      this.open()
+      await this.$nextTick()
+      if (this.actualStep.action) { await this.actualStep.action() }
     }
   },
   computed: {
+    actualStep(){
+      return this.initialSteps[this.currentStep]
+    },
     currentStepTarget () {
-      return this.isStarted ? this.steps[this.currentStep]?.target : null
+      const target = document.querySelector(this.actualStep.selector)
+      return this.isStarted ? target : null
     }
   },
-  mounted () {
+  async mounted () {
     if(isNull(localStorage.getItem(STORAGE_NAME))) {
-      this.$set(this, 'isStarted', true)
-      this.updateSteps()
-      this.onNext()
+      this.close()
+      await this.goToPage(this.currentStep)
+      this.isStarted = true
+      await this.renderStep(this.currentStep)
     }
   }
 }
