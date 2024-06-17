@@ -1,10 +1,12 @@
 <script>
+import { h } from 'vue'
+
 export default {
   name: 'Spotlight',
   props: {
     target: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   data () {
@@ -20,7 +22,7 @@ export default {
   },
   computed: {
     targetBoundingClientRect () {
-      return this.resizeKey ? this.target.getBoundingClientRect() : {}
+      return this.resizeKey ? this.target.getBoundingClientRect() : new DOMRect()
     },
     style () {
       const { top = 0, left = 0, width = 0 } = this.targetBoundingClientRect
@@ -28,7 +30,7 @@ export default {
       const circleTop = top + width / 2
       const circleDiameter = width * 2
       const circleStartColor = 'transparent'
-      const circleStopColor = 'var(--darkest)'
+      const circleStopColor = 'var(--bs-darkest)'
       const backgroundImage = `radial-gradient(circle at ${circleLeft}px ${circleTop}px, ${circleStartColor} 0%, ${circleStopColor} ${circleDiameter}px, ${circleStopColor} 100%)`
       return  { backgroundImage }
     }
@@ -37,13 +39,12 @@ export default {
     generateResizeKey () {
       this.resizeKey++
     }
+  },
+  render() {
+    return this.target ? h('div', { class: 'spotlight', style: this.style }) : []
   }
 }
 </script>
-
-<template>
-  <div class="spotlight" :style="style" v-if="target" />
-</template>
 
 <style>
   .spotlight {
