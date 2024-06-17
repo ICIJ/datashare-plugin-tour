@@ -3,7 +3,7 @@ version: 2.1
 executors:
   global-executor:
     docker:
-      - image: cimg/node:16.16.0
+      - image: cimg/node:18.19
     working_directory: ~/datashare-plugin-tour
 
 commands:
