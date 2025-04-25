@@ -2,10 +2,16 @@
   "name": "datashare-plugin-tour",
   "description": "A Datashare plugin to build a tour guide",
   "version": "1.0.0",
-  "main": "dist/index.umd.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.umd.cjs",
   "style": "dist/style.css",
+  "type": "module",
+  "dependencies": {
+    "driver.js": "^1.3.5",
+    "vue": "3.5.13"
+  },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.27.0",
+    "@icij/eslint-config-icij": "^1.0.2",
     "@vitejs/plugin-vue": "^5.0.5",
     "geckodriver": "^4.4.1",
     "nightwatch": "^3.6.3",
@@ -23,21 +29,19 @@
     "pretest": "yarn build && yarn test:pack",
     "posttest": "yarn test:clean",
     "build": "npx vite build --mode production",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "lint": "eslint .",
+    "lint:fix": "yarn lint --fix"
   },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.umd.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
     }
   },
   "author": "ICIJ <engineering@icij.org>",
   "license": "MIT",
   "files": [
     "dist"
-  ],
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "vue": "^3.4.29"
-  }
+  ]
 }
