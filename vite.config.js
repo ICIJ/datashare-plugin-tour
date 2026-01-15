@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
+import Icons from 'unplugin-icons/vite'
 import { viteExternalsPlugin } from 'vite-plugin-externals'
 
 export default ({ mode }) => {
@@ -10,8 +11,13 @@ export default ({ mode }) => {
     plugins: [
       vue(),
       // Map Vue imports to the global `__VUE_SHARED__` object on the `window`.
-      viteExternalsPlugin({ vue: '__VUE_SHARED__', pinia: '__PINIA_SHARED__' })
+      viteExternalsPlugin({ vue: '__VUE_SHARED__', pinia: '__PINIA_SHARED__' }),
+      // The "Icons" plugin generates icon components from Iconify collections.
+      Icons({ scale: 1, compiler: 'vue3' })
     ],
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(mode)
+    },
     build: {
       sourcemap: mode === 'development',
       lib: {

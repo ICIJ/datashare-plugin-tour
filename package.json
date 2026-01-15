@@ -13,9 +13,11 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.27.0",
     "@icij/eslint-config-icij": "^1.0.2",
+    "@iconify-json/ph": "^1.2.2",
     "@vitejs/plugin-vue": "^5.0.5",
     "geckodriver": "^4.4.1",
     "nightwatch": "^3.6.3",
+    "unplugin-icons": "^23.0.1",
     "vite": "^5.3.1",
     "vite-plugin-externals": "^0.6.2"
   },
