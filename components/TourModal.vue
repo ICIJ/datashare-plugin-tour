@@ -1,4 +1,5 @@
 <script setup>
+import IPhShootingStar from '~icons/ph/shooting-star'
 import img from '@/assets/tour-modal-light.svg'
 import imgDark from '@/assets/tour-modal-dark.svg'
 import { useCoreComponent } from '@/composables/useCoreComponent'
@@ -18,7 +19,7 @@ const ImageModeSource = await useCoreComponent('ImageMode/ImageModeSource')
     <template #footer="{ cancel, ok }">
       <div class="d-flex justify-content-between w-100">
         <button-icon variant="outline-secondary" @click="cancel">Skip tour</button-icon>
-        <button-icon variant="action" icon-right="shooting-star" @click="ok">Start</button-icon>
+        <button-icon variant="action" :icon-right="IPhShootingStar" @click="ok">Start</button-icon>
       </div>
     </template>
   </app-modal>

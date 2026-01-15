@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { property } from 'lodash'
 
+import IPhStudent from '~icons/ph/student'
 import { useCore } from '@/composables/useCore'
 import { useCoreComponent } from '@/composables/useCoreComponent'
 import { useTourStore } from '@/stores/tour'
@@ -37,7 +38,7 @@ const isVisible = computed(() => hasSteps.value && name === hookName.value)
       class="text-info ms-auto p-0"
       label="Discover this page"
       hide-label
-      icon-left="student"
+      :icon-left="IPhStudent"
       @click="tourStore.startTour(routeScenario)"
     />
   </app-sidebar-footer-links-entry>
