@@ -6,8 +6,8 @@ import { useCoreComponent } from '@/composables/useCoreComponent'
 
 const AppModal = await useCoreComponent('AppModal/AppModal')
 const ButtonIcon = await useCoreComponent('Button/ButtonIcon')
-const ImageMode = await useCoreComponent('ImageMode/ImageMode')
-const ImageModeSource = await useCoreComponent('ImageMode/ImageModeSource')
+const ImageMode = await useCoreComponent('Murmur/ImageMode')
+const ImageModeSource = await useCoreComponent('Murmur/ImageModeSource')
 </script>
 
 <template>
